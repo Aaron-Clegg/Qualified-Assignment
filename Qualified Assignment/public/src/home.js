@@ -14,22 +14,28 @@ let count = 0
   return count;
 }
 
-function getMostCommonGenres(books) {   
-  const bookGenres = books.map((book) => book.genre);
-  const temp = [];
-  bookGenres.map((genre) => {
-    const genreLocation = temp.findIndex((element) => element.name === genre);
-    if (genreLocation >= 0) {
-      temp[genreLocation].count = temp[genreLocation].count + 1;
+function helper(books) { ///Helper Function
+  let countObj = {}
+  books.forEach(aBook => {
+    if (countObj[aBook.genre] != null) {
+      countObj[aBook.genre]++
     } else {
-      temp.push({ name: genre, count: 1 });
+      countObj[aBook.genre] = 1
     }
-  });
-  temp.sort((alpha, delta) => delta.count - alpha.count);
-  if (temp.length > 5) {
-    return temp.slice(0, 5);
+  })
+  return countObj
+}
+function getMostCommonGenres(books) {
+  let countObj = helper(books)
+  let countArray = []
+  for (const [key, value] of Object.entries(countObj)) {
+    countArray.push({
+      name: key,
+      count: value,
+    })
   }
-  return temp;
+  countArray.sort((a, b) => b.count - a.count)
+  return countArray.slice(0, 5)
 }
 
  function getMostPopularBooks(books, count=5) {
